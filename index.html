@@ -6,7 +6,7 @@
     <title>Uptime Monitor | Dashboard</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📡</text></svg>">
     <style>
-        /* --- Estilos Avanzados v5.0 - Glassmorphism --- */
+        /* --- Estilos Avanzados v5.0 - Dark Mode --- */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
         :root {
@@ -164,7 +164,7 @@
             <div id="auth-view">
                 <form id="auth-form" class="auth-form">
                     <h2 id="auth-title">Crear una cuenta</h2>
-                    <div class="input-group" id="name-input-group" style="display: none;">
+                    <div class="input-group" id="name-input-group">
                         <label for="full_name">Nombre Completo</label>
                         <input type="text" id="full_name" autocomplete="name" />
                     </div>
@@ -288,11 +288,15 @@
                 if(profileError && profileError.code !== 'PGRST116') throw profileError;
                 welcomeMessage.textContent = `Bienvenido, ${profile?.full_name || user.email}`;
 
+                // --- INICIO DE LA CORRECCIÓN ---
                 const { data, error } = await supabase
                     .from('status_checks')
                     .select(`id, checked_at, status_text, response_time_ms, websites!inner( id, name, url )`)
                     .eq('websites.user_id', user.id)
-                    .order('created_at', { ascending: false }).limit(50);
+                    .order('checked_at', { ascending: false }) // Corregido: de 'created_at' a 'checked_at'
+                    .limit(50);
+                // --- FIN DE LA CORRECCIÓN ---
+
                 if (error) throw error;
                 
                 tableBody.innerHTML = ''; 
@@ -311,7 +315,7 @@
                         <td>${new Date(check.checked_at).toLocaleString('es-CL', { dateStyle: 'short', timeStyle: 'medium' })}</td>
                         <td>
                             <button class="delete-btn" data-site-id="${check.websites.id}" data-site-name="${check.websites.name || check.websites.url}">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M6 2l2-2h4l2 2h4v2H2V2h4zM3 6h14l-1 14H4L3 6zm5 2v10h1V8H8zm3 0v10h1V8h-1z"/></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1z" clip-rule="evenodd" /></svg>
                             </button>
                         </td>
                     `;
@@ -365,6 +369,7 @@
             authButton.textContent = isLogin ? 'Iniciar Sesión' : 'Crear cuenta';
             authToggle.textContent = isLogin ? '¿No tienes una cuenta? Regístrate' : '¿Ya tienes una cuenta? Inicia sesión';
             nameInputGroup.style.display = isLogin ? 'none' : 'block';
+            if (!isLogin) fullNameInput.required = true; else fullNameInput.required = false;
             authError.textContent = '';
             authError.classList.remove('visible');
         });

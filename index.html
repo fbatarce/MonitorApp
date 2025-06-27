@@ -3,95 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | Monitor Web</title>
+    <title>Uptime Monitor | Dashboard</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📡</text></svg>">
     <style>
+        /* --- Estilos Avanzados v5.0 - Glassmorphism --- */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        :root { --bg-color: #0f172a; --card-bg: #1e293b; --text-color: #cbd5e1; --heading-color: #f8fafc; --border-color: #334155; --primary-color: #38bdf8; --primary-hover: #0ea5e9; --status-up: #4ade80; --status-down: #f87171; --success-bg: rgba(74, 222, 128, 0.1); --success-text: #6ee7b7; --error-bg: rgba(248, 113, 113, 0.1); --error-text: #fca5a5; --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); --transition: all 0.2s ease-in-out; }
+
+        :root {
+            --bg-color: #020617;
+            --card-bg: rgba(30, 41, 59, 0.5);
+            --text-color: #cbd5e1;
+            --heading-color: #f8fafc;
+            --border-color: rgba(71, 85, 105, 0.4);
+            --primary-color: #38bdf8;
+            --primary-hover: #7dd3fc;
+            --status-up: #4ade80;
+            --status-down: #f87171;
+            --danger-color: #f43f5e;
+            --danger-hover: #fb7185;
+            --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            --transition: all 0.2s ease-in-out;
+        }
+
         * { box-sizing: border-box; }
-        body { margin: 0; font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; }
-        main { padding: 2em; max-width: 1024px; margin: 2em auto; }
-        #auth-view { max-width: 420px; margin: 4em auto; padding: 2.5em; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; text-align: center; }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 27% 37%, hsla(215, 98%, 61%, 0.1) 0px, transparent 50%),
+                radial-gradient(at 97% 21%, hsla(125, 98%, 72%, 0.1) 0px, transparent 50%),
+                radial-gradient(at 52% 99%, hsla(355, 98%, 72%, 0.1) 0px, transparent 50%),
+                radial-gradient(at 10% 29%, hsla(256, 96%, 68%, 0.1) 0px, transparent 50%),
+                radial-gradient(at 97% 96%, hsla(38, 60%, 74%, 0.1) 0px, transparent 50%),
+                radial-gradient(at 33% 50%, hsla(222, 67%, 73%, 0.1) 0px, transparent 50%),
+                radial-gradient(at 79% 53%, hsla(343, 68%, 79%, 0.1) 0px, transparent 50%);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        main { padding: 2em; max-width: 1100px; margin: 2em auto; }
+        
+        #auth-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+        }
+        #auth-view {
+            max-width: 420px;
+            width: 100%;
+            padding: 2.5em;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(12px);
+            text-align: center;
+        }
         .auth-form h2 { color: var(--heading-color); margin-bottom: 1.5em; }
         .input-group { margin-bottom: 1.25em; text-align: left; }
         .input-group label { display: block; margin-bottom: 0.5em; font-weight: 500; font-size: 0.875rem; color: #94a3b8; }
-        .input-group input { width: 100%; padding: 0.85em; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; background-color: #0f172a; color: var(--heading-color); transition: var(--transition); }
-        .input-group input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2); }
-        .auth-button { width: 100%; padding: 0.875em; border: none; border-radius: 8px; background-color: var(--primary-color); color: var(--heading-color); font-size: 1rem; font-weight: 600; cursor: pointer; transition: var(--transition); }
+        .input-group input {
+            width: 100%;
+            padding: 0.85em;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            background-color: #0f172a;
+            color: var(--heading-color);
+            transition: var(--transition);
+        }
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+        }
+        .auth-button {
+            width: 100%;
+            padding: 0.875em;
+            border: none;
+            border-radius: 8px;
+            background-color: var(--primary-color);
+            color: #020617;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
         .auth-button:hover:not(:disabled) { background-color: var(--primary-hover); }
         .auth-button:disabled { background-color: #475569; cursor: not-allowed; }
-        #auth-toggle { margin-top: 1.5em; background: none; border: none; color: var(--primary-color); cursor: pointer; font-weight: 500; }
-        #dashboard-view { display: none; }
-        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 1em; margin-bottom: 1em; }
+        #auth-toggle { margin-top: 1.5em; background: none; border: none; color: var(--primary-color); cursor: pointer; font-weight: 500; transition: var(--transition); }
+        #auth-toggle:hover { filter: brightness(1.2); }
+        
+        #dashboard-view { display: none; animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; padding-bottom: 1em; margin-bottom: 1em; gap: 1em; }
         header p { margin: 0.25em 0 0; color: #94a3b8; }
         h1 { color: var(--heading-color); font-size: 2rem; font-weight: 700; margin: 0; }
         h3 { color: var(--heading-color); margin-top: 0; font-size: 1.25rem; }
-        #logout-button { padding: 0.5em 1em; border: 1px solid var(--border-color); border-radius: 8px; background-color: transparent; color: var(--text-color); cursor: pointer; font-weight: 500; transition: var(--transition); }
+
+        #logout-button {
+            padding: 0.5em 1em;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: transparent;
+            color: var(--text-color);
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+        }
         #logout-button:hover { background-color: #334155; border-color: #475569; }
-        #add-site-section { background-color: var(--card-bg); padding: 2em; border-radius: 12px; border: 1px solid var(--border-color); margin: 2em 0; }
+        
+        #add-site-section { background: var(--card-bg); padding: 2em; border-radius: 12px; border: 1px solid var(--border-color); margin: 2em 0; }
         #add-site-form { display: flex; align-items: flex-end; gap: 1em; flex-wrap: wrap; }
         #add-site-form .input-group { flex: 1 1 200px; margin-bottom: 0; }
         #add-site-form .auth-button { width: auto; flex-shrink: 0; }
-        .form-message { margin-top: 1em; font-weight: 500; padding: 0.75em; border-radius: 8px; opacity: 0; visibility: hidden; transition: opacity 0.3s ease; }
+        
+        #status-container { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 16px 20px; text-align: left; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
+        thead th { background-color: rgba(15, 23, 42, 0.7); font-size: 0.75rem; text-transform: uppercase; color: #9ca3af; font-weight: 600; }
+        tbody tr:last-child td { border-bottom: none; }
+        tbody tr { transition: var(--transition); }
+        tbody tr:hover { background-color: #334155; }
+        td:first-child { font-weight: 600; color: var(--heading-color); }
+
+        .status-cell { display: flex; align-items: center; }
+        .status-indicator { flex-shrink: 0; width: 10px; height: 10px; border-radius: 50%; margin-right: 10px; }
+        .up .status-indicator { background-color: var(--status-up); box-shadow: 0 0 8px var(--status-up); }
+        .down .status-indicator { background-color: var(--status-down); box-shadow: 0 0 8px var(--status-down); }
+        
+        .delete-btn { background: transparent; border: none; cursor: pointer; padding: 5px; line-height: 1; }
+        .delete-btn svg { width: 20px; height: 20px; fill: #64748b; transition: var(--transition); }
+        .delete-btn:hover svg { fill: var(--danger-color); transform: scale(1.1); }
+
+        .spinner-container { padding: 4em; display: flex; justify-content: center; align-items: center; }
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 5px solid var(--border-color);
+            border-bottom-color: var(--primary-color);
+            border-radius: 50%;
+            display: inline-block;
+            animation: rotation 1s linear infinite;
+        }
+        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .form-message { margin-top: 1em; font-weight: 500; padding: 0.75em; border-radius: 8px; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
         .form-message.visible { opacity: 1; visibility: visible; }
         .success-message { color: var(--success-text); background-color: var(--success-bg); }
         .error-message { color: var(--error-text); background-color: var(--error-bg); }
-        #status-container { background-color: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 16px 20px; text-align: left; border-bottom: 1px solid var(--border-color); }
-        thead th { background-color: #111827; font-size: 0.75rem; text-transform: uppercase; color: #9ca3af; font-weight: 600; }
-        tbody tr:last-child td { border-bottom: none; }
-        tbody tr { transition: background-color 0.2s ease-in-out; }
-        tbody tr:hover { background-color: #334155; }
-        td:first-child { font-weight: 600; color: var(--heading-color); }
-        .status-cell { display: flex; align-items: center; }
-        .status-indicator { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 10px; }
-        .up { color: var(--status-up); font-weight: 700; }
-        .up .status-indicator { background-color: var(--status-up); box-shadow: 0 0 8px var(--status-up); }
-        .down { color: var(--status-down); font-weight: 700; }
-        .down .status-indicator { background-color: var(--status-down); box-shadow: 0 0 8px var(--status-down); }
-        .message-container { padding: 4em; text-align: center; color: #94a3b8; }
     </style>
 </head>
 <body>
     <main>
-        <div id="auth-view">
-            <form id="auth-form" class="auth-form">
-                <h2 id="auth-title">Crear una cuenta</h2>
-                <div class="input-group" id="name-input-group" style="display: none;">
-                    <label for="full_name">Nombre Completo</label>
-                    <input type="text" id="full_name" autocomplete="name" />
-                </div>
-                <div class="input-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" required autocomplete="email" />
-                </div>
-                <div class="input-group">
-                    <label for="password">Contraseña (mínimo 6 caracteres)</label>
-                    <input type="password" id="password" required minlength="6" autocomplete="current-password" />
-                </div>
-                <button type="submit" class="auth-button" id="auth-button">Crear cuenta</button>
-            </form>
-            <button id="auth-toggle">¿Ya tienes una cuenta? Inicia sesión</button>
-            <div id="auth-error" class="error-message form-message"></div>
+        <div id="auth-container">
+            <div id="auth-view">
+                <form id="auth-form" class="auth-form">
+                    <h2 id="auth-title">Crear una cuenta</h2>
+                    <div class="input-group" id="name-input-group" style="display: none;">
+                        <label for="full_name">Nombre Completo</label>
+                        <input type="text" id="full_name" autocomplete="name" />
+                    </div>
+                    <div class="input-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" required autocomplete="email" />
+                    </div>
+                    <div class="input-group">
+                        <label for="password">Contraseña (mínimo 6 caracteres)</label>
+                        <input type="password" id="password" required minlength="6" autocomplete="current-password" />
+                    </div>
+                    <button type="submit" class="auth-button" id="auth-button">Crear cuenta</button>
+                </form>
+                <button id="auth-toggle">¿Ya tienes una cuenta? Inicia sesión</button>
+                <div id="auth-error" class="error-message form-message"></div>
+            </div>
         </div>
-
+        
         <div id="dashboard-view">
             <header>
                 <div>
-                    <h1>Dashboard del Monitor Web</h1>
+                    <h1>Dashboard</h1>
                     <p id="welcome-message"></p>
                 </div>
                 <button id="logout-button">Cerrar Sesión</button>
             </header>
             <section id="add-site-section">
-                <h3>Añadir un nuevo sitio para monitorear</h3>
+                <h3>Añadir Sitio para Monitorear</h3>
                 <form id="add-site-form">
                     <div class="input-group">
                         <label for="site-name">Nombre del Sitio</label>
                         <input type="text" id="site-name" placeholder="Mi Blog Personal" required />
                     </div>
                      <div class="input-group">
-                        <label for="site-url">URL Completa</label>
+                        <label for="site-url">URL</label>
                         <input type="text" id="site-url" placeholder="ejemplo.com" required />
                     </div>
                     <button type="submit" class="auth-button" id="add-site-button">Añadir Sitio</button>
@@ -100,10 +208,20 @@
             </section>
             <div id="status-container">
                 <table>
-                    <thead> <tr> <th>Sitio Web</th> <th>Estado</th> <th>Tiempo de Resp.</th> <th>Fecha de Verificación</th> </tr> </thead>
+                    <thead>
+                        <tr>
+                            <th>Sitio Web</th>
+                            <th>Estado</th>
+                            <th>Tiempo de Resp.</th>
+                            <th>Fecha de Verificación</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
                     <tbody id="checks-table-body"></tbody>
                 </table>
-                <div id="message-container" class="message-container">Cargando datos...</div>
+                <div id="message-container" class="spinner-container">
+                    <div class="spinner"></div>
+                </div>
             </div>
         </div>
     </main>
@@ -115,6 +233,7 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlwbG5ob3FweWt0cW9udnJkamN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NDkzMjgsImV4cCI6MjA2NjEyNTMyOH0.tDnE9LN1ed0JridBdzXEPWZ3SBv0i9Ub1_lpQJIcJrs'
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+        const authContainer = document.getElementById('auth-container');
         const authView = document.getElementById('auth-view');
         const dashboardView = document.getElementById('dashboard-view');
         const authForm = document.getElementById('auth-form');
@@ -136,6 +255,109 @@
         const addSiteMessage = document.getElementById('add-site-message');
         const addSiteButton = document.getElementById('add-site-button');
         let isLogin = false;
+
+        function showFormMessage(element, message, type) {
+            element.textContent = message;
+            element.className = `form-message ${type}-message visible`;
+            setTimeout(() => {
+                element.classList.remove('visible');
+            }, 4000);
+        }
+
+        async function handleDelete(siteId, siteName) {
+            if (!confirm(`¿Estás seguro de que quieres dejar de monitorear "${siteName}"? Se borrará el sitio y todo su historial de chequeos.`)) {
+                return;
+            }
+            try {
+                const { error } = await supabase.from('websites').delete().eq('id', siteId);
+                if (error) throw error;
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session?.user) {
+                    fetchData(session.user);
+                }
+            } catch (err) {
+                alert(`Error al borrar el sitio: ${err.message}`);
+            }
+        }
+        
+        async function fetchData(user) {
+            messageContainer.innerHTML = '<div class="spinner"></div>';
+            messageContainer.style.display = 'flex';
+            try {
+                const { data: profile, error: profileError } = await supabase.from('profiles').select('full_name').eq('id', user.id).single();
+                if(profileError && profileError.code !== 'PGRST116') throw profileError;
+                welcomeMessage.textContent = `Bienvenido, ${profile?.full_name || user.email}`;
+
+                const { data, error } = await supabase
+                    .from('status_checks')
+                    .select(`id, checked_at, status_text, response_time_ms, websites!inner( id, name, url )`)
+                    .eq('websites.user_id', user.id)
+                    .order('created_at', { ascending: false }).limit(50);
+                if (error) throw error;
+                
+                tableBody.innerHTML = ''; 
+                if (data.length === 0) {
+                    messageContainer.innerHTML = 'No tienes sitios monitoreados o aún no hay verificaciones.';
+                } else {
+                    messageContainer.style.display = 'none';
+                }
+                for (const check of data) {
+                    const row = document.createElement('tr');
+                    const statusClass = check.status_text === 'UP' ? 'up' : 'down';
+                    row.innerHTML = `
+                        <td>${check.websites.name || check.websites.url}</td>
+                        <td class="${statusClass}"><div class="status-cell"><span class="status-indicator"></span><span>${check.status_text}</span></div></td>
+                        <td>${check.response_time_ms} ms</td>
+                        <td>${new Date(check.checked_at).toLocaleString('es-CL', { dateStyle: 'short', timeStyle: 'medium' })}</td>
+                        <td>
+                            <button class="delete-btn" data-site-id="${check.websites.id}" data-site-name="${check.websites.name || check.websites.url}">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M6 2l2-2h4l2 2h4v2H2V2h4zM3 6h14l-1 14H4L3 6zm5 2v10h1V8H8zm3 0v10h1V8h-1z"/></svg>
+                            </button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                }
+
+                document.querySelectorAll('.delete-btn').forEach(button => {
+                    button.onclick = () => handleDelete(button.dataset.siteId, button.dataset.siteName);
+                });
+
+            } catch (err) {
+                messageContainer.innerHTML = `<span class="error-message visible">Error al cargar los datos: ${err.message}</span>`;
+                console.error(err);
+            }
+        }
+
+        addSiteForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            addSiteButton.disabled = true;
+            addSiteButton.textContent = 'Añadiendo...';
+            
+            const { data: { session } } = await supabase.auth.getSession();
+            const user = session?.user;
+
+            if (!user) {
+                showFormMessage(addSiteMessage, 'Error: Debes iniciar sesión.', 'error');
+                addSiteButton.disabled = false;
+                return;
+            }
+            
+            let url = siteUrlInput.value.trim();
+            if (url && !url.startsWith('http')) { url = `https://${url}`; }
+
+            try {
+                const { error } = await supabase.from('websites').insert({ url: url, name: siteNameInput.value, user_id: user.id });
+                if (error) throw error;
+                showFormMessage(addSiteMessage, '¡Sitio añadido con éxito!', 'success');
+                addSiteForm.reset();
+                fetchData(user);
+            } catch (err) {
+                showFormMessage(addSiteMessage, `Error: ${err.message}`, 'error');
+            } finally {
+                addSiteButton.disabled = false;
+                addSiteButton.textContent = 'Añadir Sitio';
+            }
+        });
         
         authToggle.addEventListener('click', () => {
             isLogin = !isLogin;
@@ -151,7 +373,6 @@
             event.preventDefault();
             authButton.disabled = true;
             authButton.textContent = 'Procesando...';
-            authError.textContent = '';
             authError.classList.remove('visible');
             const email = emailInput.value;
             const password = passwordInput.value;
@@ -167,83 +388,19 @@
                 }
             }
             if (error) {
-                authError.textContent = error.message;
-                authError.classList.add('visible');
+                showFormMessage(authError, error.message, 'error');
             }
             authButton.disabled = false;
             authButton.textContent = isLogin ? 'Iniciar Sesión' : 'Crear cuenta';
         });
 
-        logoutButton.addEventListener('click', async () => { await supabase.auth.signOut(); });
-
-        addSiteForm.addEventListener('submit', async (event) => {
-            event.preventDefault();
-            addSiteButton.disabled = true;
-            addSiteButton.textContent = 'Añadiendo...';
-            addSiteMessage.textContent = '';
-            addSiteMessage.className = 'form-message';
-            const { data: { session } } = await supabase.auth.getSession();
-            const user = session?.user;
-            if (!user) { /* ... (error handling) ... */ return; }
-            
-            let url = siteUrlInput.value.trim();
-            if (url && !url.startsWith('http')) { url = `https://${url}`; }
-
-            try {
-                const { error } = await supabase.from('websites').insert({ url: url, name: siteNameInput.value, user_id: user.id });
-                if (error) throw error;
-                addSiteMessage.textContent = '¡Sitio añadido! El primer chequeo se hará en los próximos 5 minutos.';
-                addSiteMessage.className = 'form-message success-message visible';
-                addSiteForm.reset();
-            } catch (err) {
-                addSiteMessage.textContent = `Error: ${err.message}`;
-                addSiteMessage.className = 'form-message error-message visible';
-            } finally {
-                addSiteButton.disabled = false;
-                addSiteButton.textContent = 'Añadir Sitio';
-                setTimeout(() => { addSiteMessage.classList.remove('visible'); }, 4000);
-            }
-        });
-
-        async function fetchData(user) {
-            messageContainer.textContent = 'Cargando datos...';
-            messageContainer.style.display = 'block';
-            try {
-                const { data: profile, error: profileError } = await supabase.from('profiles').select('full_name').eq('id', user.id).single();
-                if(profileError) throw profileError;
-                welcomeMessage.textContent = `Bienvenido, ${profile.full_name || user.email}`;
-
-                const { data, error } = await supabase
-                    .from('status_checks')
-                    .select(`id, created_at, status_text, response_time_ms, websites!inner( name, url )`)
-                    .eq('websites.user_id', user.id)
-                    .order('created_at', { ascending: false }).limit(50);
-                if (error) throw error;
-                tableBody.innerHTML = ''; 
-                if (data.length === 0) {
-                    messageContainer.textContent = 'No tienes sitios monitoreados o aún no hay verificaciones.';
-                } else {
-                    messageContainer.style.display = 'none';
-                }
-                for (const check of data) {
-                    const row = document.createElement('tr');
-                    const statusClass = check.status_text === 'UP' ? 'up' : 'down';
-                    row.innerHTML = `<td>${check.websites.name || check.websites.url}</td> <td class="${statusClass}"><div class="status-cell"><span class="status-indicator"></span><span>${check.status_text}</span></div></td> <td>${check.response_time_ms} ms</td> <td>${new Date(check.created_at).toLocaleString('es-CL', { dateStyle: 'short', timeStyle: 'medium' })}</td>`;
-                    tableBody.appendChild(row);
-                }
-            } catch (err) {
-                messageContainer.innerHTML = `<span class="error">Error al cargar los datos: ${err.message}</span>`;
-                console.error(err);
-            }
-        }
-        
         supabase.auth.onAuthStateChange((event, session) => {
             if (session?.user) {
-                authView.style.display = 'none';
+                authContainer.style.display = 'none';
                 dashboardView.style.display = 'block';
                 fetchData(session.user);
             } else {
-                authView.style.display = 'block';
+                authContainer.style.display = 'flex';
                 dashboardView.style.display = 'none';
             }
         });
